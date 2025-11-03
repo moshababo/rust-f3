@@ -10,10 +10,11 @@ edition = "2024"
 rust-version = "1.85.0"
 
 [workspace.dependencies]
-# Internal workspace packages
+# Internal packages - exposed for git dependencies
 filecoin-f3-blssig = { path = "./blssig", version = "0.1.0" }
 filecoin-f3-certs = { path = "./certs", version = "0.1.0" }
 filecoin-f3-gpbft = { path = "./gpbft", version = "0.1.0" }
+filecoin-f3-merkle = { path = "./merkle", version = "0.1.0" }
 filecoin-f3-rpc = { path = "./rpc", version = "0.1.0" }
 
 ahash = "0.8"
@@ -38,6 +39,7 @@ num-bigint = { version = "0.4.6", features = ["serde"] }
 num-traits = "0.2.19"
 parking_lot = "0.12"
 rand = "0.8"
+rayon = "1.11.0"
 serde = { version = "1", features = ["derive"] }
 serde_cbor = "0.11.2"
 serde_json = { version = "1", features = ["raw_value"] }

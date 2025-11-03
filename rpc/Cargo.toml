@@ -9,7 +9,7 @@ license.workspace = true
 edition.workspace = true
 
 [dependencies]
-filecoin-f3-gpbft = { path = "../gpbft", version = "0.1.0" }
+filecoin-f3-gpbft = { workspace = true }
 
 anyhow.workspace = true
 jsonrpsee.workspace = true
