@@ -10,6 +10,12 @@ edition = "2024"
 rust-version = "1.85.0"
 
 [workspace.dependencies]
+# Internal workspace packages
+filecoin-f3-blssig = { path = "./blssig", version = "0.1.0" }
+filecoin-f3-certs = { path = "./certs", version = "0.1.0" }
+filecoin-f3-gpbft = { path = "./gpbft", version = "0.1.0" }
+filecoin-f3-rpc = { path = "./rpc", version = "0.1.0" }
+
 ahash = "0.8"
 anyhow = "1"
 base32 = "0.5.1"
