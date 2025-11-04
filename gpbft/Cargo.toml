@@ -14,7 +14,7 @@ ahash = { workspace = true }
 anyhow = { workspace = true }
 base32 = { workspace = true }
 cid = { workspace = true }
-filecoin-f3-merkle = { path = "../merkle", version = "0.1.0" }
+filecoin-f3-merkle = { workspace = true }
 fvm_ipld_bitfield = { workspace = true }
 fvm_ipld_encoding = { workspace = true }
 keccak-hash = { workspace = true }

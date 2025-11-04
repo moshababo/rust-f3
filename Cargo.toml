@@ -10,12 +10,23 @@ edition = "2024"
 rust-version = "1.85.0"
 
 [workspace.dependencies]
+# Internal packages - exposed for git dependencies
+filecoin-f3-blssig = { path = "./blssig", version = "0.1.0" }
+filecoin-f3-certs = { path = "./certs", version = "0.1.0" }
+filecoin-f3-gpbft = { path = "./gpbft", version = "0.1.0" }
+filecoin-f3-merkle = { path = "./merkle", version = "0.1.0" }
+filecoin-f3-rpc = { path = "./rpc", version = "0.1.0" }
+
 ahash = "0.8"
 anyhow = "1"
 base32 = "0.5.1"
 base64 = "0.22"
-blake2 = { git = "https://github.com/huitseeker/hashes.git", rev = "4d3debf264a45da9e33d52645eb6ee9963336f66", features = ["blake2x"] } # PR: https://github.com/RustCrypto/hashes/pull/704
-bls-signatures = { version = "0.15" }
+blake2 = { git = "https://github.com/huitseeker/hashes.git", branch = "blake2x-pr", features = [
+    "blake2x",
+] }
+bls-signatures = { version = "0.15", default-features = false, features = [
+    "blst",
+] }
 bls12_381 = "0.8"
 cid = { version = "0.10.1", features = ["std"] }
 fvm_ipld_bitfield = "0.7.1"
@@ -28,7 +39,7 @@ num-bigint = { version = "0.4.6", features = ["serde"] }
 num-traits = "0.2.19"
 parking_lot = "0.12"
 rand = "0.8"
-rayon = "1.10"
+rayon = "1.11.0"
 serde = { version = "1", features = ["derive"] }
 serde_cbor = "0.11.2"
 serde_json = { version = "1", features = ["raw_value"] }

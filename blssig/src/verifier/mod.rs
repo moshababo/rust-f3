@@ -193,8 +193,7 @@ impl Verifier for BLSVerifier {
         }
 
         let bdn = BDNAggregation::new(typed_pub_keys)?;
-        let indices: Vec<u64> = (0..typed_sigs.len() as u64).collect();
-        let agg_sig = bdn.aggregate_sigs(&indices, &typed_sigs)?;
+        let agg_sig = bdn.aggregate_sigs(typed_sigs)?;
         Ok(agg_sig.as_bytes())
     }
 

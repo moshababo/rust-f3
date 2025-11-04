@@ -13,11 +13,12 @@ use crate::verifier::BLSError;
 use blake2::Blake2xs;
 use blake2::digest::{ExtendableOutput, Update, XofReader};
 use bls_signatures::{PublicKey, Serialize, Signature};
-use bls12_381::{G1Projective, G2Projective, Scalar};
-use rayon::prelude::*;
+use blstrs::{G1Projective, G2Projective, Scalar};
+use group::Group;
 
 /// BDN aggregation context for managing signature and public key aggregation
 pub struct BDNAggregation {
+    pub(crate) pub_keys: Vec<PublicKey>,
     pub(crate) coefficients: Vec<Scalar>,
     pub(crate) terms: Vec<PublicKey>,
 }
@@ -32,33 +33,25 @@ impl BDNAggregation {
         let terms = Self::calc_terms(&pub_keys, &coefficients);
 
         Ok(Self {
+            pub_keys,
             coefficients,
             terms,
         })
     }
 
     /// Aggregates signatures using BDN aggregation with coefficients.
-    /// Computes: sum((coef_i + 1) * sig_i) for signatures at the given indices
-    pub fn aggregate_sigs(
-        &self,
-        indices: &[u64],
-        sigs: &[Signature],
-    ) -> Result<Signature, BLSError> {
-        if sigs.len() != indices.len() {
+    /// Computes: sum((coef_i + 1) * sig_i)
+    pub fn aggregate_sigs(&self, sigs: Vec<Signature>) -> Result<Signature, BLSError> {
+        if sigs.len() != self.pub_keys.len() {
             return Err(BLSError::LengthMismatch {
-                pub_keys: indices.len(),
+                pub_keys: self.pub_keys.len(),
                 sigs: sigs.len(),
             });
         }
 
         let mut agg_point = G2Projective::identity();
-        for (sig, &idx) in sigs.iter().zip(indices.iter()) {
-            let idx = idx as usize;
-            if idx >= self.coefficients.len() {
-                return Err(BLSError::SignerIndexOutOfRange(idx));
-            }
-
-            let coef = self.coefficients[idx];
+        for (i, sig) in sigs.iter().enumerate() {
+            let coef = self.coefficients[i];
             let sig_point: G2Projective = (*sig).into();
             let sig_c = sig_point * coef;
             let sig_c = sig_c + sig_point;
@@ -114,7 +107,7 @@ impl BDNAggregation {
             bytes_32[..16].copy_from_slice(chunk);
 
             // BLS12-381 scalars expects little-endian byte representation
-            let scalar = Scalar::from_bytes(&bytes_32);
+            let scalar = Scalar::from_bytes_le(&bytes_32);
             if scalar.is_some().into() {
                 coefficients.push(scalar.unwrap());
             } else {
@@ -126,15 +119,13 @@ impl BDNAggregation {
     }
 
     pub fn calc_terms(pub_keys: &[PublicKey], coefficients: &[Scalar]) -> Vec<PublicKey> {
-        pub_keys
-            .par_iter()
-            .enumerate()
-            .map(|(i, pub_key)| {
-                let pub_key_point: G1Projective = (*pub_key).into();
-                let pub_c = pub_key_point * coefficients[i];
-                let term = pub_c + pub_key_point;
-                term.into()
-            })
-            .collect()
+        let mut terms = vec![];
+        for (i, pub_key) in pub_keys.iter().enumerate() {
+            let pub_key_point: G1Projective = (*pub_key).into();
+            let pub_c = pub_key_point * coefficients[i];
+            let term = pub_c + pub_key_point;
+            terms.push(term.into());
+        }
+        terms
     }
 }

@@ -8,10 +8,10 @@ license.workspace = true
 edition.workspace = true
 
 [dependencies]
-filecoin-f3-blssig = { path = "../blssig", version = "0.1.0" }
-filecoin-f3-certs = { path = "../certs", version = "0.1.0" }
-filecoin-f3-gpbft = { path = "../gpbft", version = "0.1.0" }
-filecoin-f3-rpc = { path = "../rpc", version = "0.1.0" }
+filecoin-f3-blssig = { workspace = true }
+filecoin-f3-certs = { workspace = true }
+filecoin-f3-gpbft = { workspace = true }
+filecoin-f3-rpc = { workspace = true }
 
 anyhow.workspace = true
 base64 = { workspace = true }
