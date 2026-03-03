@@ -39,6 +39,6 @@ impl PubKey {
 pub enum NetworkName {
     #[strum(serialize = "filecoin")]
     Mainnet,
-    #[strum(serialize = "calibrationnet")]
+    #[strum(serialize = "calibrationnet2")]
     TestnetCalibration,
 }

@@ -27,7 +27,7 @@ struct NetworkConfig {
 
 const NETWORK_CONFIGS: [NetworkConfig; 2] = [
     NetworkConfig {
-        network_name: "calibrationnet",
+        network_name: "calibrationnet2",
         endpoint: "https://filecoin-calibration.ipc.space/rpc/v1",
     },
     NetworkConfig {
